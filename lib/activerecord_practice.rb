@@ -50,28 +50,30 @@ class Customer < ApplicationRecord
   end
 
   def self.last_names_starting_with_b
-
+    Customer.where("last LIKE 'B%'").order(:birthdate)
   end
 
   def self.twenty_youngest
-
+    Customer.limit(20).order(birthdate: :desc)
   end
 
   # Methods to update table
   def self.update_gussie_murray_birthdate
-
+    Customer.find_by(first: 'Gussie', last:"Murray").
+      update(birthdate: Time.parse("February 8, 2004"))
   end
 
   def self.change_all_invalid_emails_to_blank
-
+    Customer.where.not("email LIKE '%@%'").
+      or(Customer.where(email: nil)).update_all(email: "")
   end
 
   def self.delete_meggie_herman
-
+    Customer.destroy_by(first: 'Meggie', last: 'Herman')
   end
 
   def self.delete_everyone_born_before_1978
-
+    Customer.destroy_by("birthdate < '1978-01-01'")
   end
 
 end
